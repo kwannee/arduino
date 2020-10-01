@@ -55,11 +55,12 @@ void loop() {
 
 // turn on the LED if the distance is between dist_min and dist_max
 
-  // analogWrite 두번째 인자에 넣어줄 변수 led의 값을 넣는다.
+  // analogWrite 두번째 인자에 넣어줄 변수 led를 초기화하고 값을 준다.
   // dist_raw에 비례하여 200에 가까워질수록 밝기가 세지도록(led 값이 0에 가까워지도록)한다.
 
   // dist_raw가 200이하일 때와 200 초과일 때를 나누어 식을 만든다.
   float led = dist_raw <= 200 ? 255-(2.55*(dist_raw-100)) : 2.55*(dist_raw-200); 
+  
   //led 값이 255 이상으로 올라가는 것을 방지한다.
   led = led >=255 ? 255 : led;
   led = led <= 0 ? 0 : led;
@@ -82,9 +83,11 @@ float USS_measure(int TRIG, int ECHO)
   delayMicroseconds(10);
   digitalWrite(TRIG, LOW);
   reading = pulseIn(ECHO, HIGH, timeout) * scale; // unit: mm
+  
   //만약 reading이 0이 된다면 이전 값인 dist_raw값으로 대체한다.
   if(reading < dist_min || reading > dist_max) reading = dist_raw; // return 0 when out of range.
   return reading;
+  
   // Pulse duration to distance conversion example (target distance = 17.3m)
   // - round trip distance: 34.6m
   // - expected pulse duration: 0.1 sec, or 100,000us
